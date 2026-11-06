@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Minha Pokédex | Portfólio 2027</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #edf2f8;
+    color: #24344d;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* ===============================
+   POKÉMONS DE FUNDO QUE FOGEM
+   =============================== */
+#pokemonBackground {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.pokemon-bg {
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    pointer-events: none;
+    will-change: transform;
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    opacity: 0.75;
+    user-select: none;
+}
+
+.pokemon-bg img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
+}
+
+.pokemon-bg.fugindo {
+    transition: transform 0.35s ease-out;
+}
+
+/* Garante que o conteúdo fique acima do fundo */
+header, main, footer {
+    position: relative;
+    z-index: 1;
+}
+
+/* CABEÇALHO */
+
+header {
+    background: #c92735;
+    color: white;
+    text-align: center;
+    padding: 45px 20px;
+    border-bottom: 8px solid #202d42;
+}
+
+.pokeball {
+    width: 75px;
+    height: 75px;
+    background: linear-gradient(
+        to bottom,
+        #e83b45 48%,
+        #222 48%,
+        #222 55%,
+        white 55%
+    );
+    border: 5px solid #222;
+    border-radius: 50%;
+    margin: 0 auto 20px;
+    position: relative;
+}
+
+.pokeball::after {
+    content: "";
+    position: absolute;
+    width: 19px;
+    height: 19px;
+    background: white;
+    border: 5px solid #222;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+header h1 {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+header p {
+    font-size: 15px;
+    opacity: .9;
+}
+
+/* CONTEÚDO */
+
+.container {
+    max-width: 1100px;
+    margin: 35px auto;
+    padding: 0 20px;
+}
+
+.intro {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.intro h2 {
+    font-size: 25px;
+    margin-bottom: 10px;
+    color: #c92735;
+}
+
+/* ESTATÍSTICAS */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 35px;
+}
+
+.stat {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 3px 10px #00000012;
+}
+
+.stat h3 {
+    font-size: 27px;
+    color: #c92735;
+}
+
+.stat p {
+    font-size: 13px;
+    color: #68758a;
+}
+
+/* PROJETOS */
+
+.section-title {
+    margin-bottom: 20px;
+    border-left: 5px solid #f4c52e;
+    padding-left: 12px;
+}
+
+.projects {
+    display: grid;
+    grid-template-columns: repeat(
+        auto-fit,
+        minmax(240px, 1fr)
+    );
+    gap: 20px;
+}
+
+.project {
+    background: white;
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: 0 4px 12px #00000012;
+    border-top: 5px solid #c92735;
+    transition: .3s;
+}
+
+.project:hover {
+    transform: translateY(-5px);
+}
+
+.project-number {
+    font-size: 12px;
+    color: #8995a6;
+    font-weight: bold;
+}
+
+.project h3 {
+    margin: 12px 0;
+    color: #263b59;
+}
+
+.project p {
+    font-size: 14px;
+    color: #68758a;
+    line-height: 1.5;
+    margin-bottom: 15px;
+}
+
+.status {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.concluido {
+    background: #d8f5df;
+    color: #24783b;
+}
+
+.andamento {
+    background: #fff1c9;
+    color: #987000;
+}
+
+.aguardando {
+    background: #e7eaf0;
+    color: #657083;
+}
+
+.project a {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    background: #c92735;
+    color: white;
+    padding: 11px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.project a:hover {
+    background: #a91c29;
+}
+
+/* RODAPÉ */
+
+footer {
+    margin-top: 50px;
+    background: #202d42;
+    color: white;
+    text-align: center;
+    padding: 25px 15px;
+    font-size: 13px;
+}
+
+/* CELULAR */
+
+@media (max-width: 600px) {
+    header h1 {
+        font-size: 24px;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    .pokemon-bg {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+
+/* TELA DE INÍCIO POKÉBOLA */
+body.tela-inicial {
+    overflow: hidden;
+}
+.intro-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+    padding: 24px;
+    background:
+        radial-gradient(circle at 50% 42%, #384d6b 0, #202d42 45%, #111927 100%);
+    color: white;
+    text-align: center;
+    transition: opacity .7s ease, visibility .7s ease;
+}
+.intro-screen.saindo {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+.intro-screen h1 {
+    font-size: clamp(25px, 5vw, 42px);
+    letter-spacing: 2px;
+    text-shadow: 0 4px 15px #0008;
+}
+.intro-screen p {
+    color: #dce5f2;
+    font-size: 15px;
+}
+.launch-ball {
+    position: relative;
+    width: 190px;
+    height: 190px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+    filter: drop-shadow(0 15px 22px #0008);
+    transition: transform .25s ease, filter .25s ease;
+    animation: flutuar 2.5s ease-in-out infinite;
+}
+.launch-ball:hover {
+    transform: scale(1.07);
+    filter: drop-shadow(0 18px 28px #000a);
+}
+.launch-ball:focus-visible {
+    outline: 4px solid #f4c52e;
+    outline-offset: 10px;
+}
+.launch-ball .metade {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    border: 9px solid #171d27;
+    z-index: 2;
+    transition: transform .85s cubic-bezier(.2,.8,.2,1);
+}
+.launch-ball .metade.superior {
+    top: 0;
+    border-radius: 100px 100px 0 0;
+    border-bottom: 0;
+    background: linear-gradient(145deg, #ff5962, #c92735);
+    transform-origin: center bottom;
+}
+.launch-ball .metade.inferior {
+    bottom: 0;
+    border-radius: 0 0 100px 100px;
+    border-top: 0;
+    background: linear-gradient(145deg, #fff, #dce3ed);
+    transform-origin: center top;
+}
+.launch-ball .faixa {
+    position: absolute;
+    z-index: 3;
+    top: calc(50% - 6px);
+    left: 0;
+    width: 100%;
+    height: 12px;
+    background: #171d27;
+}
+.launch-ball .botao-central {
+    position: absolute;
+    z-index: 4;
+    top: 50%;
+    left: 50%;
+    width: 54px;
+    height: 54px;
+    border: 9px solid #171d27;
+    border-radius: 50%;
+    background: #fff;
+    transform: translate(-50%, -50%);
+    box-shadow: inset 0 0 0 5px #dce3ed;
+}
+.launch-ball .botao-central::after {
+    content: "";
+    position: absolute;
+    inset: 8px;
+    border-radius: 50%;
+    background: #fff;
+}
+.launch-ball.abrindo {
+    animation: none;
+}
+.launch-ball.abrindo .metade.superior {
+    transform: translateY(-115px) rotate(-18deg);
+}
+.launch-ball.abrindo .metade.inferior {
+    transform: translateY(115px) rotate(18deg);
+}
+.launch-ball.abrindo .botao-central {
+    animation: brilho 1s ease forwards;
+}
+.intro-screen .dica {
+    font-size: 13px;
+    color: #f4c52e;
+    letter-spacing: 1px;
+    animation: pulsar 1.5s ease-in-out infinite;
+}
+@keyframes flutuar {
+    0%, 100% { translate: 0 0; }
+    50% { translate: 0 -12px; }
+}
+@keyframes pulsar {
+    0%, 100% { opacity: .65; }
+    50% { opacity: 1; }
+}
+@keyframes brilho {
+    0% { box-shadow: 0 0 0 0 #fff; }
+    100% { box-shadow: 0 0 0 28px #ffffff00; }
+}
+@media (max-width: 600px) {
+    .launch-ball { width: 155px; height: 155px; }
+    .launch-ball.abrindo .metade.superior { transform: translateY(-95px) rotate(-18deg); }
+    .launch-ball.abrindo .metade.inferior { transform: translateY(95px) rotate(18deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .launch-ball, .intro-screen .dica { animation: none; }
+    .launch-ball .metade, .intro-screen { transition-duration: .01ms; }
+    .pokemon-bg { transition-duration: .01ms; }
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="pokemonBackground" aria-hidden="true"></div>
+
+<div class="intro-screen" id="introScreen">
+    <h1>MINHA JORNADA POKÉMON</h1>
+    <p>Prepare-se para explorar minha coleção de projetos!</p>
+
+    <button class="launch-ball" id="launchBall"
+            type="button" aria-label="Abrir Pokébola e entrar no portfólio">
+        <span class="metade superior"></span>
+        <span class="metade inferior"></span>
+        <span class="faixa"></span>
+        <span class="botao-central"></span>
+    </button>
+
+    <p class="dica">CLIQUE NA POKÉBOLA PARA COMEÇAR</p>
+</div>
+
+
+<header>
+
+    <div class="pokeball"></div>
+
+    <h1>MINHA JORNADA POKÉMON</h1>
+
+    <p>Portfólio de Exercícios | Temporada 2027</p>
+
+</header>
+
+<main class="container">
+
+    <section class="intro">
+
+        <h2>Bem-vindo à minha Pokédex!</h2>
+
+        <p>
+            Aqui estão registrados todos os meus projetos,
+            exercícios e conquistas durante minha jornada
+            de aprendizado em programação.
+        </p>
+
+    </section>
+
+    <section class="stats">
+
+        <div class="stat">
+            <h3 id="total">0</h3>
+            <p>Projetos cadastrados</p>
+        </div>
+
+        <div class="stat">
+            <h3 id="completed">0</h3>
+            <p>Projetos concluídos</p>
+        </div>
+
+        <div class="stat">
+            <h3 id="progress">0</h3>
+            <p>Em andamento</p>
+        </div>
+
+    </section>
+
+    <h2 class="section-title">
+        ⚡ Minha coleção de projetos
+    </h2>
+
+    <section class="projects" id="projects">
+
+    </section>
+
+</main>
+
+<footer>
+
+    <p>⚡ Treinador em formação | Portfólio 2027</p>
+
+    <p>Todos os direitos reservados.</p>
+
+</footer>
+
+<script>
+
+// ====================================
+// CADASTRE SEUS EXERCÍCIOS AQUI
+// ====================================
+
+const projetos = [
+
+    {
+        numero: "001",
+        nome: "Meu primeiro projeto",
+        descricao: "Eu sou foda.",
+        status: "concluido",
+        link: "https://rafaelgarcia-collab.github.io/cadastro/cadastro3.html"
+    },
+
+    {
+        numero: "002",
+        nome: "Segundo exercício",
+        descricao: "Descrição do segundo exercício.",
+        status: "andamento",
+        link: ""
+    },
+
+    {
+        numero: "003",
+        nome: "Terceiro exercício",
+        descricao: "Descrição do terceiro exercício.",
+        status: "aguardando",
+        link: ""
+    },
+
+    {
+        numero: "004",
+        nome: "Quarto exercício",
+        descricao: "Descrição do quarto exercício.",
+        status: "aguardando",
+        link: ""
+    }
+
+
+];
+
+// ====================================
+// EXIBIÇÃO DOS PROJETOS
+// ====================================
+
+const areaProjetos = document.getElementById("projects");
+
+function carregarProjetos() {
+
+    areaProjetos.innerHTML = "";
+
+    projetos.forEach(projeto => {
+
+        let textoStatus = "";
+        let classeStatus = "";
+
+        if (projeto.status === "concluido") {
+            textoStatus = "Concluído";
+            classeStatus = "concluido";
+        }
+
+        else if (projeto.status === "andamento") {
+            textoStatus = "Em andamento";
+            classeStatus = "andamento";
+        }
+
+        else {
+            textoStatus = "Aguardando";
+            classeStatus = "aguardando";
+        }
+
+        const linkValido = projeto.link &&
+            projeto.link.trim() !== "";
+
+        const botao = linkValido
+            ? `<a href="${projeto.link}" target="_blank"
+                 rel="noopener noreferrer">ACESSAR PROJETO ↗</a>`
+            : `<a href="#" onclick="return false"
+                 style="background:#8995a6;cursor:not-allowed">
+                 LINK EM BREVE
+               </a>`;
+
+        areaProjetos.innerHTML += `
+
+            <article class="project">
+
+                <span class="project-number">
+                    POKÉDEX Nº ${projeto.numero}
+                </span>
+
+                <h3>${projeto.nome}</h3>
+
+                <p>${projeto.descricao}</p>
+
+                <span class="status ${classeStatus}">
+                    ${textoStatus}
+                </span>
+
+                ${botao}
+
+            </article>
+
+        `;
+
+    });
+
+    // ATUALIZA OS CONTADORES
+
+    document.getElementById("total").textContent =
+        projetos.length;
+
+    document.getElementById("completed").textContent =
+        projetos.filter(p => p.status === "concluido").length;
+
+    document.getElementById("progress").textContent =
+        projetos.filter(p => p.status === "andamento").length;
+
+}
+
+// INICIA A PÁGINA
+
+carregarProjetos();
+
+
+// ====================================
+// POKÉMONS DE FUNDO QUE FOGEM DO MOUSE
+// ====================================
+
+const pokemonBackground = document.getElementById("pokemonBackground");
+
+// ====================================
+// ⬇️ ADICIONE AQUI OS CAMINHOS DAS IMAGENS ⬇️
+// ====================================
+// Basta colocar o caminho/URL da imagem de cada Pokémon.
+// Exemplo: "imagens/pikachu.png" ou "https://site.com/pikachu.png"
+const imagensPokemon = {
+    pikachu:    "pikachu.png",
+    bulbasaur:  "Bulbasaur.webp",
+    charmander: "dragão.webp",
+    squirtle:   "007Squirtle.webp"
+};
+
+// Configuração dos pokémons que ficarão no fundo
+const pokemonsConfig = [
+    { tipo: "pikachu",   x: 8,  y: 15, tamanho: 80 },
+    { tipo: "bulbasaur", x: 85, y: 25, tamanho: 75 },
+    { tipo: "charmander",x: 15, y: 70, tamanho: 85 },
+    { tipo: "squirtle",  x: 78, y: 75, tamanho: 78 },
+    { tipo: "pikachu",   x: 50, y: 85, tamanho: 65 },
+    { tipo: "bulbasaur", x: 30, y: 40, tamanho: 60 },
+    { tipo: "charmander",x: 92, y: 55, tamanho: 70 },
+    { tipo: "squirtle",  x: 5,  y: 45, tamanho: 68 }
+];
+
+let pokemonsFundo = [];
+let posicoesPokemons = [];
+const raioDeteccao = 180; // distância em px para o pokémon fugir
+
+// Cria os elementos dos pokémons
+function criarPokemonsFundo() {
+    pokemonsConfig.forEach((cfg, index) => {
+        const el = document.createElement("div");
+        el.className = "pokemon-bg";
+
+        const img = document.createElement("img");
+        img.src = imagensPokemon[cfg.tipo] || "";
+        img.alt = cfg.tipo;
+        img.draggable = false;
+        // Se a imagem não carregar, apenas fica invisível (não quebra a página)
+        img.onerror = () => { img.style.opacity = "0"; };
+
+        el.appendChild(img);
+
+        el.style.width = cfg.tamanho + "px";
+        el.style.height = cfg.tamanho + "px";
+
+        // Posição base (percentual) - guardamos em pixels calculados
+        el.dataset.baseX = cfg.x;
+        el.dataset.baseY = cfg.y;
+        el.dataset.tipo = cfg.tipo;
+
+        pokemonBackground.appendChild(el);
+
+        const pos = {
+            el: el,
+            baseXPercent: cfg.x,
+            baseYPercent: cfg.y,
+            // posição atual em px
+            x: 0,
+            y: 0,
+            // deslocamento da fuga
+            offsetX: 0,
+            offsetY: 0,
+            tamanho: cfg.tamanho,
+            fugindo: false
+        };
+
+        pokemonsFundo.push(pos);
+        posicoesPokemons.push(pos);
+    });
+
+    // Posiciona após o layout
+    requestAnimationFrame(posicionarPokemons);
+}
+
+// Calcula a posição base em pixels
+function calcularPosicaoBase(pos) {
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    const elW = pos.tamanho;
+    const elH = pos.tamanho;
+
+    // Converte percentual para px, mantendo dentro da tela
+    const baseX = (pos.baseXPercent / 100) * (w - elW);
+    const baseY = (pos.baseYPercent / 100) * (h - elH);
+
+    return { x: baseX, y: baseY };
+}
+
+// Aplica posição (base + offset) aos elementos
+function aplicarPosicoes() {
+    pokemonsFundo.forEach(pos => {
+        const base = calcularPosicaoBase(pos);
+        const finalX = base.x + pos.offsetX;
+        const finalY = base.y + pos.offsetY;
+
+        // Mantém dentro da tela (com uma margem)
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        const clampedX = Math.max(-pos.tamanho * 0.3, Math.min(w - pos.tamanho * 0.7, finalX));
+        const clampedY = Math.max(-pos.tamanho * 0.3, Math.min(h - pos.tamanho * 0.7, finalY));
+
+        pos.el.style.transform = `translate(${clampedX}px, ${clampedY}px)`;
+        pos.x = clampedX;
+        pos.y = clampedY;
+    });
+}
+
+// Posiciona todos os pokémons no início
+function posicionarPokemons() {
+    aplicarPosicoes();
+}
+
+// Move os pokémons para longe do mouse
+let mouseX = -9999;
+let mouseY = -9999;
+
+document.addEventListener("mousemove", (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+
+    pokemonsFundo.forEach(pos => {
+        const centroX = pos.x + pos.tamanho / 2;
+        const centroY = pos.y + pos.tamanho / 2;
+
+        const dx = centroX - mouseX;
+        const dy = centroY - mouseY;
+        const distancia = Math.sqrt(dx * dx + dy * dy);
+
+        if (distancia < raioDeteccao && distancia > 0.1) {
+            // Quanto mais perto, mais forte a fuga
+            const forca = (raioDeteccao - distancia) / raioDeteccao; // 0 a 1
+            const intensidade = 120; // deslocamento máximo em px
+
+            // Direção da fuga (normalizada)
+            const dirX = dx / distancia;
+            const dirY = dy / distancia;
+
+            // Aplica fuga com um pouco de imprecisão para parecer orgânico
+            pos.offsetX = dirX * intensidade * forca;
+            pos.offsetY = dirY * intensidade * forca;
+
+            pos.el.classList.add("fugindo");
+            pos.fugindo = true;
+        } else {
+            // Volta suavemente para a posição base
+            if (pos.fugindo) {
+                pos.offsetX *= 0.85;
+                pos.offsetY *= 0.85;
+                if (Math.abs(pos.offsetX) < 1 && Math.abs(pos.offsetY) < 1) {
+                    pos.offsetX = 0;
+                    pos.offsetY = 0;
+                    pos.el.classList.remove("fugindo");
+                    pos.fugindo = false;
+                }
+            }
+        }
+    });
+
+    aplicarPosicoes();
+});
+
+// Também no toque (mobile)
+document.addEventListener("touchmove", (e) => {
+    if (e.touches.length > 0) {
+        mouseX = e.touches[0].clientX;
+        mouseY = e.touches[0].clientY;
+
+        pokemonsFundo.forEach(pos => {
+            const centroX = pos.x + pos.tamanho / 2;
+            const centroY = pos.y + pos.tamanho / 2;
+            const dx = centroX - mouseX;
+            const dy = centroY - mouseY;
+            const distancia = Math.sqrt(dx * dx + dy * dy);
+
+            if (distancia < raioDeteccao && distancia > 0.1) {
+                const forca = (raioDeteccao - distancia) / raioDeteccao;
+                const intensidade = 100;
+                const dirX = dx / distancia;
+                const dirY = dy / distancia;
+                pos.offsetX = dirX * intensidade * forca;
+                pos.offsetY = dirY * intensidade * forca;
+                pos.el.classList.add("fugindo");
+                pos.fugindo = true;
+            }
+        });
+        aplicarPosicoes();
+    }
+}, { passive: true });
+
+// Reposiciona ao redimensionar
+window.addEventListener("resize", () => {
+    posicionarPokemons();
+    // Limpa offsets para reposicionar corretamente
+    pokemonsFundo.forEach(pos => {
+        pos.offsetX = 0;
+        pos.offsetY = 0;
+    });
+    aplicarPosicoes();
+});
+
+// Inicializa os pokémons de fundo
+criarPokemonsFundo();
+
+
+// ====================================
+// TELA DE INÍCIO POKÉBOLA
+// ====================================
+
+document.body.classList.add("tela-inicial");
+
+const telaInicial = document.getElementById("introScreen");
+const botaoPokebola = document.getElementById("launchBall");
+
+botaoPokebola.addEventListener("click", () => {
+    if (botaoPokebola.classList.contains("abrindo")) return;
+
+    botaoPokebola.classList.add("abrindo");
+    telaInicial.classList.add("iniciando");
+
+    // Aguarda a animação da Pokébola antes de revelar o portfólio.
+    window.setTimeout(() => {
+        telaInicial.classList.add("saindo");
+        document.body.classList.remove("tela-inicial");
+
+        window.setTimeout(() => {
+            telaInicial.remove();
+        }, 750);
+    }, 950);
+});
+
+</script>
+
+</body>
+</html>
